@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class SeServerConfig(AppConfig):
-    name = 'SE_Server'
+class ServerConfig(AppConfig):
+    name = 'Server'
