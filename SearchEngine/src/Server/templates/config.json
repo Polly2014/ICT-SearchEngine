@@ -1,0 +1,31 @@
+//config.json
+{//表示一个聚合块（顺序遍历文件数据表时，文件累计大小每达到1.98G便形成1聚合块）
+	"file_list":[//一个聚合块下的文件列表
+		{"fullPathAndName":<绝对路径+文件名>, "dirname":<目录名>},//一个文件对应的信息
+		{"fullPathAndName":"/home/data/test.txt", "dirname":"/home"},
+		......
+	]
+}
+
+[//全部的聚合块列表
+	{//表示一个聚合块（顺序遍历文件数据表时，文件累计大小每达到1.98G便形成1聚合块）
+		"aggregationName": "aggregation_0",//聚合块名称
+		"aggregationIndexName": "aggregation_0.ary",//聚合块对应索引文件名称
+		"file_list":[//一个聚合块下的文件列表
+			{"fullPathAndName":<绝对路径+文件名>, "dirname":<目录名>},//一个文件对应的信息
+			{"fullPathAndName":"/home/data/test.txt", "dirname":"/home"},
+			......
+		]
+	},
+	{
+		"aggregationName": "aggregation_1",//聚合块名称
+		"aggregationIndexName": "aggregation_1.ary",//聚合块对应索引文件名称
+		"file_list":[
+			{"fullPathAndName":<绝对路径+文件名>, "dirname":<目录名>},//一个文件对应的信息
+			{"fullPathAndName":"/home/data/test.txt", "dirname":"/home/data"},
+			......
+		]
+	},
+	......
+]
+

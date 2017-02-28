@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Login</title>
+<style type="text/css">
+*{margin:0; padding:0;}
+body{background-color:#000;}
+#box_login{width:300px; height:250px; margin:0 auto; margin-top:150px; border:2px solid #66CAEE; border-radius:4px; background-color:transparent; color:#66CAEE;}
+#box_login h3{font-size:22px; margin:20px auto; text-align:center; margin-bottom:30px; color:#66CAEE;}
+#box_login input{display:block; width:75%; height:32px; margin:0 auto; border:1px solid #66CAEE; border-radius:4px; background-color:transparent; padding-left:12%; color:#66CAEE;}
+#box_login input[type=text]{background:url(/static/images/username.png) 5px 0 no-repeat;}
+#box_login input[type=password]{background:url(/static/images/password.png) 5px 0 no-repeat;}
+#box_btn{width:70%; height:30px; margin:0 auto;}
+#box_login button{display:block; width:40%; height:30px; text-align:center; line-height:25px; border:1px solid #66CAEE; border-radius:4px; background-color:transparent; color:#66CAEE; font-size:14px; float:left;}
+#box_login button:hover{cursor:pointer; color:#FFF;}
+#form_login a{display:block; width:40%; height:30px; text-align:center; line-height:30px; text-decoration:none; border:1px solid #66CAEE; border-radius:4px; background-color:transparent; color:#66CAEE; font-size:14px; float:right;}
+#form_login a:hover{cursor:pointer; color:#FFF;}
+</style>
+</head>
+<body>
+	<div id="box_login">
+		<h3>Admin</h3>
+		<form id="form_login" action="/login/" method="POST">
+			<input type="text" name="username" id="username">
+			<br />
+			<input type="password" name="password" id="password">
+			<br />
+			{% if errors %}
+				<p style="color:red;">*{{errors}}</p>
+			{% endif %}
+			<div id="box_btn">
+				<button type="submit">Login</button>
+				<a href="/register/">Register</a>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

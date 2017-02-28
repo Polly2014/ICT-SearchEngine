@@ -1,0 +1,248 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel='icon' type='image/png' href="{% static 'images/icons/bsearch.ico' %}">
+        <!--jquery库-->
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <!--自定义库-->
+        <link rel="stylesheet" href="{% static 'css/frame.css' %}">
+    </head>
+    <!--导入futioncharts-->
+    <script type="text/javascript" src="{% static 'fusioncharts/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/fusioncharts.charts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/themes/fusioncharts.theme.fint.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusioncharts/themes/fusioncharts.theme.zune.js' %}"></script>
+<!--换算-->
+<script>
+function transform(num){
+    if(num < 1024){
+        return num+"B";
+    }else if(num < 1024*1024){
+        str = (num/1024).toFixed(2);
+        return str+"KB";
+    }else if(num < 1024*1024*1024){
+        str = (num/1024/1024).toFixed(2);
+        return str+"MB";
+    }else if(num < 1024*1024*1024*1024){
+        str = (num/1024/1024/1024).toFixed(2);
+        return str+"GB";
+    }else if(num < 1024*1024*1024*1024*1024){
+        str = (num/1024/1024/1024/1024).toFixed(2);
+        return str+"TB";
+    }
+}
+</script>
+<!--websocket-->
+    <script language="javascript" type="text/javascript"> 
+
+    function WebSocketSearch() {
+        if ("WebSocket" in window) {
+            var wsUri ="ws://" + window.location.host + "/indexCreate/";
+            //var wsUri = 'ws://localhost:3369';
+            socket = new WebSocket(wsUri);
+            socket.onmessage = function (evt) {
+                console.log(evt.data);
+                if (evt.data == 'Over') {
+                    socket.close();
+                } else {
+                    var format_result = $.parseJSON(evt.data);
+                    var result_detail = format_result["detail"].finished; // 取出已经完成创建的detail信
+                    var rate_data = [];  // 用来修改图表
+
+                    // 填写下方的表格
+                    $("#table_info").html('');
+                    $.each(result_detail, function(index,item){
+                        if( index < 15 ){
+                            rate_data.unshift({"label":item["name"], "value":item["rate"]});
+                        }
+                        var li_code = "<tr><td>"+item["name"]+"</td><td>"+item["fileNumTotal"]+"</td><td>"+item["fileSizeTotal"]+"</td><td>"+item["timeCreated"]+"</td><td>"+item["timeFinished"]+"</td><td>"+item["timeWasted"]+"</td><td>"+item["rate"]+"</td></tr>";
+                        $("#table_info").append(li_code);
+                    });
+
+                    // 修改图标, 增加新的平均速度
+                    // 每次只提取最近的15个文件的平均速度
+                    var sl_rate=getChartFromId('AverageRate');
+                    var current_data=sl_rate.getChartData("json"); // 获取当前的数据
+                    current_data.data = rate_data;
+                    sl_rate.setChartData(current_data, "json");
+                }
+            }
+            if (socket.readyState == WebSocket.OPEN) socket.onmessage();
+            socket.onopen = function (evt) {
+                socket.send("createInformation");
+            };
+            socket.onclose = function (evt) {
+                socket.close();
+            };
+        } else {
+            // 浏览器不支持 WebSocket
+            alert("您的浏览器不支持 WebSocket!");
+        }
+    }
+
+    $(document).ready(function(){
+    	WebSocketSearch();
+    });
+
+    </script>
+<!--bar-->
+<script>
+        FusionCharts.ready(function () {
+            var revenueChart = new FusionCharts({
+                id: 'AverageRate',
+                type: 'column2d',
+                renderAt: 'chart-1',
+                width: '100%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": {
+                        "caption": "最近的15个文件",
+                        "subCaption": "创建速度",
+                        "xAxisName": "文件序号",
+                        "yAxisName": "平均速度",
+                        "numberPrefix": "",
+                        "paletteColors": "#0075c2",
+                        "bgColor": "#ffffff",
+                        "borderAlpha": "20",
+                        "canvasBorderAlpha": "0",
+                        "usePlotGradientColor": "0",
+                        "plotBorderAlpha": "10",
+                        "placevaluesInside": "1",
+                        "rotatevalues": "1",
+                        "valueFontColor": "#ffffff",
+                        "showXAxisLine": "1",
+                        "xAxisLineColor": "#999999",
+                        "divlineColor": "#999999",
+                        "divLineIsDashed": "1",
+                        "showAlternateHGridColor": "0",
+                        "subcaptionFontBold": "0",
+                        "subcaptionFontSize": "14",
+                        "animation": "0",
+                        "numdisplaysets": "15", // 展示的bar的数目
+                    },
+                    "data": [
+                        
+                    ],
+                    "trendlines": [
+                        {
+                            "line": [
+                                {
+                                    "startvalue": "7000000",
+                                    "color": "#1aaf5d",
+                                    "valueOnRight": "1",
+                                    "displayvalue": "历史平均创建速度"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }).render();
+        });
+    </script>
+
+
+
+
+
+
+<body>
+        <!--导航栏部分-->
+        <div>
+            <nav class="navbar navbar-tabs " role="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#" style="font-size: 40px">BSearch</a>
+                    </div>
+                    <ul class="nav nav-tabs ">
+                        <li style="padding-left: 100px; font-size: 22px;"><a href="/dashboard/creating">正在创建</a></li>
+                        <li class="active" style=" font-size: 22px;"><a href="/dashboard/created">完成创建</a></li>
+                        <ul class="nav navbar-right navbar-tabs">
+                            <li class="navbar-right" style="padding-right: 30px; font-size: 20px;"><a href="#">退出</a></li>
+                            <li class="navbar-right" style="padding-right: 50px; font-size: 20px;"><a href="#">用户</a></li>
+                            <li class="navbar-right" style="padding-right: 50px; font-size: 20px;"><a data-toggle="modal" data-target="#AddModal">添加</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" style="padding-top: 10%" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            添加目录
+                        </h4>
+                    </div>
+                    <form method="POST" action="/directoryAddition/">
+                        <div class="modal-body">
+                            <input style="width: 100%;" type="text" name="directory" id="directory" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                添加
+                            </button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+<div class="page-content-wrapper">
+    <!--图表部分-->
+    <div class="portlet-mid light bordered">
+        <div class="portlet-title">
+            <div class="caption">平均创建速度</div>
+        </div>
+        <div class="portlet-body" id="chart1">
+            <div id="chart-1">FusionCharts will render here</div>
+        </div>
+    </div>
+
+    <!--表格部分-->
+    <div>
+        <div class="portlet-mid light bordered">
+            <div class="portlet-title">
+                <div class="caption">表格</div>
+            </div>
+            <div class="portlet-body" id="chart1">
+                <table class="table table-bordered table-hover">
+                    <caption>创建信息表格</caption>
+                    <thead>
+                        <tr>
+                            <th>目录</th>
+                            <th>文件数目</th>
+                            <th>大小</th>
+                            <th>创建时间</th>
+                            <th>完成时间</th>
+                            <th>总计用时</th>
+                            <th>平均速度</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_info">
+                        <tr>
+                            <td>/home/cxk/1/</td>
+                            <td>1GB</td>
+                            <td>2015.12.32 12:32:30</td>
+                            <td>2:00:00</td>
+                            <td>3MB/s</td>
+                            <td>5MB/s</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

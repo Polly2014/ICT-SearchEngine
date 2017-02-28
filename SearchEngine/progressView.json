@@ -1,0 +1,25 @@
+[
+	{
+		"fileNumCreated": 11,
+		"status": "Finished",
+		"name": "/home/polly/test",
+		"timeCreated": "2016-12-20 15:15:30",
+		"timeFinished": "2016-12-20 15:21:19",
+		"timeWasted": "00:05:48",
+		"fileNumTotal": 11,
+		"rate": "rate of index create",
+		"fileSizeCreated": 6393018410,
+		"fileSizeTotal": 6393018410
+	}, {
+		"fileNumCreated": 11,
+		"status": "Finished",
+		"name": "/home/polly/test",
+		"timeCreated": "2016-12-20 15:15:30",
+		"timeFinished": "2016-12-20 15:21:19",
+		"timeWasted": "00:05:48",
+		"fileNumTotal": 11,
+		"rate": "17.52",
+		"fileSizeCreated": 6393018410,
+		"fileSizeTotal": 6393018410
+	}
+] 

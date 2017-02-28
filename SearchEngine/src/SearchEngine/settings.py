@@ -25,7 +25,7 @@ SECRET_KEY = 'w_6+u)2r8&q*exup(g5&*q-1ljinlg5yu_gs4!4zme*a2u6dpa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Server',
+    'channels',
+    'django_crontab',
+    #'socket_server',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -71,17 +74,52 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SearchEngine.wsgi.application'
 
+#Channels
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "asgiref.inmemory.ChannelLayer",
+#         "ROUTING": "SearchEngine.routing.channel_routing",
+#     },
+# }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+        "ROUTING": "SearchEngine.routing.channel_routing",
+    },
+}
+
+#Django-crontab
+
+CRONJOBS = [
+    ('0 0 * * *','Server.cron.runDirectoryAnalysisProgram', '>/home/polly/cron_jobs.log'),
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'data.db'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'data.db'),
+        # 'OPTION': {
+        #     'timeout': 50,
+        # }
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bsearch',
+        'USER':'root',
+        'PASSWORD':'bjpktz2016',
+        'HOST':'127.0.0.1',
+        #'PORT':'5432',
+        'PORT':'3306',
+        #'CONN_MAX_AGE': 1200,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -106,8 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'zh-CN'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -115,8 +154,16 @@ USE_L10N = True
 
 USE_TZ = True
 
+FILE_CHARSET = 'utf-8'
+
+DEFAULT_CHARSET = 'utf-8'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")

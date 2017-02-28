@@ -1,0 +1,154 @@
+//----------------------------------------------------------------
+//Input Data
+{
+    “index_file”: “full path of the output index file”,
+    “raw_files: ”[
+        {
+            “name”: “full path of the raw file”,
+            “offset”: 0, // the starting offset (in byte) in the file
+            “length”: 1000 // the length (in byte) from the offset to be indexed
+        },
+        {
+            “name”: “full path of the raw file2”,
+            “offset”: 0, // the starting offset (in byte) in the file
+            “length”: 1000 // the length (in byte) from the offset to be indexed
+        }
+    ]
+}
+
+//Output Data
+{
+    “code”: 0, // 0 means success, otherwise fail.
+    “message”: “the error message when code is not 0”
+}
+
+
+
+//----------------------------------------------------------------
+
+//Input Data
+{
+
+}
+
+
+
+//-----------------------------------------------------------------
+{
+    "code": 0,
+    "matches": [{
+        "name": "network2.cap",
+        "offset": 25067362,
+        "offset_bit": 7,
+        "length": 20
+    }, {
+        "name": "network2.cap",
+        "offset": 25301856,
+        "offset_bit": 7,
+        "length": 20
+    }]
+}
+
+//-------------------------------------------------------------------
+{
+    "summary": {
+        "time_cost": "0.1471",
+        "num_file": 2,
+        "num_match": 3
+    },
+    "detail": [{
+        "match_list": [{
+            "length": 27,
+            "offset_bit": 3,
+            "offset": 14239190
+        }, {
+            "length": 27,
+            "offset_bit": 3,
+            "offset": 41084188
+        }],
+        "num_match": 2,
+        "name": "/home/polly/test/Photoshop_CS6.7z",
+        "directory_info": "/home/polly/test",
+        "file_size": 1208670407
+    }, {
+        "match_list": [{
+            "length": 27,
+            "offset_bit": 7,
+            "offset": 15835395
+        }],
+        "num_match": 1,
+        "name": "/home/polly/test/ubuntu-14.10-desktop-i386.iso",
+        "directory_info": "/home/polly/test",
+        "file_size": 1186529280
+    }]
+}
+
+//------------------------------------------------------------------------
+
+[
+    {
+        "directory_info": "The directory which contain the file",
+        "filefullpathname": "Full path and name of the file",
+        "filename": "The filename",
+        "fileflag": "(0-2)", //0-unindex, 1-indexing, 2-indexed
+        "filesize": "The size of file",
+        "configured": "(0-1)", //0-has no configFile, 1-has configFile
+        "createtime": "The start time of index create",
+        "finishtime": "The end time of index create"
+    }, {
+        "directory_info": "/home/polly/test",
+        "filefullpathname": "/home/polly/test/text.txt",
+        "filename": "text.txt",
+        "fileflag": 0, //0-unindex, 1-indexing, 2-indexed
+        "filesize": 12782137,
+        "configured": 0, //0-has no configFile, 1-has configFile
+        "createtime": 1483092193,
+        "finishtime": 1483092392
+    }
+]
+
+//----------------------------------------------------------------------------
+[
+    {
+        "directory_name": "/hoem/polly/test"//the directories user has added
+    },{
+        "directory_name": "/hoem/polly/test2"
+    },
+]
+
+//-----------------------------------------------------------------------------
+{
+    "summary": {
+        "fileNumCreated": 50,
+        "fileNumTotal": 60,
+        "fileSizeCreated": 1209310,
+        "fileSizeTotal": 132030129,
+        "rate": 50.4, //the rate's unit is M/s
+    },
+    "detail": {
+        "finished": [{
+            "name": "/home/polly/test", //directory name
+            "fileNumCreated": 30,
+            "fileNumTotal": 30,
+            "fileSizeCreated": 12030129,
+            "fileSizeTotal": 12030129,
+            "timeCreated": "2016-12-22 20:03:12", //the time when directory started to create index
+            "status": "Finished", //the value is Finished or Unfinished
+            "timeWasted": "00:30:00", //the time cost of directory index creation,(time_end - time_started)
+            "timeFinished": "2016-12-22 20:33:12", //the time when directory finished to create index
+            "rate": 10.2, //the rate's unit is M/s
+        }],
+        "unfinished": [{
+            "name": "/home/polly/test3", //directory name
+            "fileNumCreated": 20,
+            "fileNumTotal": 30,
+            "fileSizeCreated": 1209310,
+            "fileSizeTotal": 120301290,
+            "timeCreated": "2016-12-22 20:03:12", //the time when directory started to create index
+            "status": "Unfinished", //the value is Finished or Unfinished
+            "timeWasted": "00:30:00", //(time_now - time_started)
+            "timeFinished": "---------- --:--:--", //the time when directory finished to create index
+            "rate": 10.2, //the rate's unit is M/s
+        }]
+    }
+}

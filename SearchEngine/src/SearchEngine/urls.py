@@ -15,9 +15,25 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from SE_Server import views as se_views
+from Server import views as se_views
+import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', se_views.index, name='default')
+    url(r'^$', se_views.index, name='default'),
+    url(r'^dashboard/$', se_views.dashboard, name='dashboard_index'),
+    url(r'^dashboard/(creating|created)/$', se_views.dashboard, name='dashboard'),
+    url(r'^login/$', se_views.login, name='login'),
+    url(r'^logout/$', se_views.logout, name='logout'),
+    url(r'^register/$', se_views.register, name='register'),
+    url(r'^search/$', se_views.search, name="search"),
+    url(r'^history/$', se_views.history, name="history"),
+    url(r'^getHistoryDetail/$', se_views.getHistoryDetail, name="getHistoryDetail"),
+    url(r'^getDetailMatchInfo/$', se_views.getDetailMatchInfo, name="getDetailMatchInfo"),
+    url(r'^getDirectoryBrowserInfo/$', se_views.getDirectoryBrowserInfo, name="getDirectoryBrowserInfo"),
+    url(r'^addDirectoryToDatabase/$', se_views.addDirectorytoDatabase, name='addDirectoryToDatabase'),
+    url(r'^directoryAddition/$', se_views.directoryAddition, name='directoryAddition'),
+    url(r'^test/$', se_views.test, name='test'),
+    
+    #url(r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_ROOT }),
 ]

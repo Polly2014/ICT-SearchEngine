@@ -1,0 +1,148 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Result Page</title>
+    <link rel='icon' type='image/png' href="{% static 'images/icons/bsearch.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/mycss.css' %}" />
+    <script src="{% static 'js/jquery-1.8.3.min.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/fusioncharts/fusioncharts.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/fusioncharts/themes/fusioncharts.theme.zune.js' %}"></script>
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript">
+FusionCharts.ready(function() {
+    var chargePercent = 0,
+        flag = 0,
+        count = 0,
+        chart = new FusionCharts({
+            type: 'hled',
+            renderAt: 'chart-container',
+            id: "myHLED",
+            width: '100%',
+            height: '130',
+            dataFormat: 'json',
+            bgImage: "{% static 'images/bsearch-small.png' %}",
+            bgImageAlpha: "40",
+            dataSource: {
+                "chart": {
+                    "caption": "{{searchString}}", // TODO: set to the string user searched
+                    "subcaption": "耗时 21.32 秒，匹配到12个文件，289项记录", // TODO: update this when new data available 
+                    "lowerLimit": "0",
+                    "upperLimit": "50", //TODO: should be the total file size
+                    "useSameFillColor": "1",
+                    "showGaugeBorder": "0",
+                    "numberSuffix": " TB", //TODO: Set TB or GB or MB according to the actual file size
+                    "captionFontSize": "24",
+                    "subcaptionFontSize": "16",
+                    
+                    //Add hover effect
+                    "showhovereffect": "1",
+
+                    "theme": "fint",
+                    "showValue": "0",
+                    "showTickMarks": "0",
+                    "ledSize": "1",
+                    "ledGap": "0"
+                },
+                "annotations": {
+
+                    "groups": [
+
+                        {
+                            //Each group needs a unique ID
+                            "id": "remainingTime",
+                            "showbelow": "0",
+                            "items": [
+
+                                {
+                                    "id": "remainingTxt",
+                                    //Polygon item 
+                                    "type": "text",
+                                    "text": "",
+                                    "fontColor": "#FFFFFF",
+                                    "fontSize": "18",
+                                    "bold": "1",
+                                    "x": "$gaugeCenterX",
+                                    "y": "$gaugeCenterY",
+                                }
+                            ]
+                        }
+                    ]
+
+                },
+
+                "colorRange": {
+                    "color": [ //TODO: set those minValue and maxValue according to the actual total file size
+                        {
+                            "minValue": "0",
+                            "maxValue": "2",
+                            "code": "#999999"
+                        }, {
+                            "minValue": "2",
+                            "maxValue": "10",
+                            "code": "#FF2020",
+                        }, {
+                            "minValue": "10",
+                            "maxValue": "20",
+                            "code": "#C04a00"
+                        }, {
+                            "minValue": "20",
+                            "maxValue": "35",
+                            "code": "#E09900"
+                        }, {
+                            "minValue": "35",
+                            "maxValue": "45",
+                            "code": "#6baa01"
+                        }, {
+                            "minValue": "45",
+                            "maxValue": "50", //TODO: this is the total file size to be searched, other values scale accordingly
+                            "code": "#30ca30"
+                        }
+                    ]
+                },
+                "value": "0"
+            },
+
+            "events": {
+                "renderComplete": function(evt, arg) { //TODO: replace this function as the updated data
+                    var chargeInterval = setInterval(function() {
+
+                        chargePercent += 0.15;
+                        if (chargePercent > 50) {
+                            chargePercent = 50;
+                        }
+
+                        FusionCharts.items["myHLED"].feedData("&value=" + chargePercent.toFixed(2));
+                    }, 200);
+                },
+                "realTimeUpdateComplete": function(evt, arg) {
+                    var annotations = evt.sender.annotations,
+                        chart = evt.sender.chart,
+                        value = evt.sender.getData(),
+                        strText = "已检索 " + value + " TB / 共 50 TB"; // TODO: change 50 to total file size
+
+                    annotations.update('remainingTxt', {
+                        "text": strText
+                    });
+                }
+
+            }
+
+        })
+        .render();
+});
+    </script>
+</head>
+<body>
+<!-- This is the header search bar of the result page -->
+<table width="100%"><tr><td valign="center" width="1"><img src="{% static 'images/bsearch-small.png' %}"></td>
+<td><div id="chart-container">Fusion Chart will render here</div></td>
+</tr></table>
+<hr>
+<!-- TODO: put search result here. Will update later !> 
+</body>
+</html>
